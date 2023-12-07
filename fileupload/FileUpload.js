@@ -13,11 +13,11 @@ const {
 
 // make sure you set these environment variables prior to running the sample.
 const deviceConnectionString = "HostName=KSW.azure-devices.net;DeviceId=RaspberryKSW;SharedAccessKey=9inK442ZoKt2GkdU2Q339P2ePV4hFMELoAIoTPGwskM==";
-const localFilePath = "/home/itsp/iot_project/fileupload/myimage.png";
-const storageBlobName = path.basename(localFilePath);
+//const localFilePath = "/home/itsp/iot_project/fileupload/myimage.png";
+//const storageBlobName = path.basename(localFilePath);
 
 async function uploadToBlob(localFilePath, client) {
-    const blobInfo = await client.getBlobSharedAccessSignature(storageBlobName);
+    const blobInfo = await client.getBlobSharedAccessSignature(path.basename(localFilePath));
     if (!blobInfo) {
         throw new errors.ArgumentError('Invalid upload parameters');
     }
@@ -69,32 +69,29 @@ const FilePath = "/home/itsp/iot_project/img";
 var fs = require('fs');
 
 let timer;
+const deviceClient = Client.fromConnectionString(deviceConnectionString, Protocol);
+console.log("success connect with azure");
 
-timer = setInterval(() => {
+timer = setInterval(async () => {
     try {
         // upload image file to azure
-        fs.readdir(FilePath, function (error, filelist) {
+        fs.readdir(FilePath, async function (error, filelist) {
+            console.log(filelist)
             for (var i = 1; i < filelist.length; i++) {
-                console.log(FilePath + "/" + filelist[i]);
-            }
-        })
+                const image_path = FilePath + "/" + filelist[i];
+                await uploadToBlob(image_path, deviceClient);
 
-
-
-        //remove all image file
-        fs.readdir(FilePath, function (error, filelist) {
-            for (var i = 1; i < filelist.length; i++) {
+                //remove all image file
+                console.log("rm file ", image_path);
                 fs.unlinkSync(FilePath + "/" + filelist[i]);
-                console.log(filelist[i]);
             }
         })
-
     } catch (error) {
         if (err.code == 'ENOENT') {
             console.log("delete image file fail");
         }
     }
-}, 2000);
+}, 15000);
 
 
 
@@ -106,13 +103,3 @@ timer = setInterval(() => {
 // Create a client device from the connection string and upload the local file to blob storage.
 
 
-// console.log(deviceConnectionString);
-// const deviceClient = Client.fromConnectionString(deviceConnectionString, Protocol);
-// console.log("success connect with azure");
-// uploadToBlob(localFilePath, deviceClient)
-//     .catch((err) => {
-//         console.log(err);
-//     })
-//     .finally(() => {
-//         process.exit();
-//     });
