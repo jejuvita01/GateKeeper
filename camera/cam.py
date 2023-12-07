@@ -55,9 +55,9 @@ class CamClass:
             
     def cap(self, ROI=False):
         if ROI:
-            imwrite(self.path+time.asctime()+'.png', self.__getCapROI(self.img02))
+            imwrite(self.path+time.asctime().replace(' ','_')+'.png', self.__getCapROI(self.img02))
         else:
-            imwrite(self.path+time.asctime()+'.png', self.img02)
+            imwrite(self.path+time.asctime().replace(' ','_')+'.png', self.img02)
     
 
     def clean(self):
