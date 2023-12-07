@@ -2,7 +2,7 @@
 
 const Client = require('azure-iothub').Client;
 
-const connectionString = process.env.IOT_HUB_CONNECTION_STRING;
+const connectionString = "HostName=KSW.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=YPGM8PhuUDtWAMrKuzy95zNMRTtiiNiuiAIoTNcQ3bs=";
 
 const serviceClient = Client.fromConnectionString(connectionString);
 
