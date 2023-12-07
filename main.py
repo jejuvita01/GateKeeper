@@ -4,10 +4,10 @@ import threading
 import time
 
 
-fileUploadNotTread = threading.Thread(target=runJavaScript.runFileUploadNotification)
+fileUploadNotTread = threading.Thread(target=runJavaScript.runFileUpload)
 fileUploadNotTread.daemon = True
 
 if __name__=='__main__':
     fileUploadNotTread.start()
-    time.sleep(1.2)
+    time.sleep(3)
     runCam()
