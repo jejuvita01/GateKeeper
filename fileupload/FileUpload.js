@@ -64,14 +64,55 @@ async function uploadToBlob(localFilePath, client) {
     await client.notifyBlobUploadStatus(blobInfo.correlationId, isSuccess, statusCode, statusDescription);
 }
 
+// Read file
+const FilePath = "/home/itsp/iot_project/img";
+var fs = require('fs');
+
+let timer;
+
+timer = setInterval(() => {
+    try {
+        // upload image file to azure
+        fs.readdir(FilePath, function (error, filelist) {
+            for (var i = 1; i < filelist.length; i++) {
+                console.log(FilePath + "/" + filelist[i]);
+            }
+        })
+
+
+
+        //remove all image file
+        fs.readdir(FilePath, function (error, filelist) {
+            for (var i = 1; i < filelist.length; i++) {
+                fs.unlinkSync(FilePath + "/" + filelist[i]);
+                console.log(filelist[i]);
+            }
+        })
+
+    } catch (error) {
+        if (err.code == 'ENOENT') {
+            console.log("delete image file fail");
+        }
+    }
+}, 2000);
+
+
+
+
+
+
+
+
 // Create a client device from the connection string and upload the local file to blob storage.
-console.log(deviceConnectionString);
-const deviceClient = Client.fromConnectionString(deviceConnectionString, Protocol);
-console.log("success connect with azure");
-uploadToBlob(localFilePath, deviceClient)
-    .catch((err) => {
-        console.log(err);
-    })
-    .finally(() => {
-        process.exit();
-    });
+
+
+// console.log(deviceConnectionString);
+// const deviceClient = Client.fromConnectionString(deviceConnectionString, Protocol);
+// console.log("success connect with azure");
+// uploadToBlob(localFilePath, deviceClient)
+//     .catch((err) => {
+//         console.log(err);
+//     })
+//     .finally(() => {
+//         process.exit();
+//     });
